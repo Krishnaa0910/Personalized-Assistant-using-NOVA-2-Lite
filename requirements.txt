@@ -1,0 +1,17 @@
+Flask==3.0.0
+SpeechRecognition==3.10.0
+pyttsx3==2.90
+wikipedia==1.4.0
+plyer==2.1.0
+openai==1.72.0
+requests==2.31.0
+pyautogui==0.9.54
+pyaudio==0.2.11 ; platform_system == "Windows"
+pyobjc==9.2 ; sys_platform == "darwin"
+pygetwindow==0.0.9
+pymsgbox==1.0.9
+pyscreeze==0.1.28
+pyrect==0.2.0
+pyperclip==1.8.2
+pywin32==306 ; platform_system == "Windows"
+flask-cors
