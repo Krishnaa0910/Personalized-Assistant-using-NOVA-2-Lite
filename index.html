@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Personal Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .chat-container {
+      height: calc(100vh - 240px);
+    }
+    .message {
+      animation: fadeIn 0.3s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <i class="fas fa-robot text-blue-600 text-2xl mr-2"></i>
+          <span class="text-xl font-semibold">AI Assistant</span>
+        </div>
+        <div class="hidden sm:flex space-x-8 items-center">
+          <a href="/" class="text-blue-600 border-b-2 border-blue-600 px-2 py-1">Home</a>
+          <a href="/reminders" class="text-gray-600 hover:text-gray-900 px-2 py-1">Reminders</a>
+          <a href="/search" class="text-gray-600 hover:text-gray-900 px-2 py-1">Search</a>
+          <a href="/settings" class="text-gray-600 hover:text-gray-900 px-2 py-1">Settings</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Your Personal AI Assistant</h1>
+      <p class="text-lg text-gray-600">I'm here to help with tasks, searches, and conversations.</p>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <div id="chat-messages" class="chat-container overflow-y-auto mb-6">
+        <div class="message flex items-start mb-4">
+          <div class="flex-shrink-0">
+            <i class="fas fa-robot text-blue-600 text-xl"></i>
+          </div>
+          <div class="ml-3 bg-gray-100 rounded-lg py-2 px-4">
+            <p class="text-gray-900">Hello! How can I assist you today?</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input -->
+      <div class="border-t pt-4">
+        <div class="flex items-center">
+          <button id="voice-btn" class="bg-blue-600 text-white rounded-full p-3 hover:bg-blue-700 transition-colors mr-4">
+            <i class="fas fa-microphone text-xl"></i>
+          </button>
+          <div class="flex-grow relative">
+            <input type="text" id="text-input" class="w-full border-2 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500" placeholder="Type your message..." />
+            <button id="send-btn" class="absolute right-2 top-2 text-blue-600 hover:text-blue-700" onclick="handleMessageSend(event)">
+              <i class="fas fa-paper-plane text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+        <i class="fas fa-search text-blue-600 text-2xl mb-4"></i>
+        <h3 class="text-lg font-semibold mb-2">Web Search</h3>
+        <p class="text-gray-600">Search the web for information with natural language queries.</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+        <i class="fas fa-clock text-blue-600 text-2xl mb-4"></i>
+        <h3 class="text-lg font-semibold mb-2">Reminders & Alarms</h3>
+        <p class="text-gray-600">Set and manage reminders and alarms with voice commands.</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+        <i class="fas fa-language text-blue-600 text-2xl mb-4"></i>
+        <h3 class="text-lg font-semibold mb-2">Translation</h3>
+        <p class="text-gray-600">Translate text between different languages instantly.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const chatMessages = document.getElementById('chat-messages');
+      const textInput = document.getElementById('text-input');
+      const voiceBtn = document.getElementById('voice-btn');
+
+      function addMessage(text, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message flex items-start mb-4' + (isUser ? ' justify-end' : '');
+
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'flex-shrink-0' + (isUser ? ' order-2 ml-3' : '');
+        iconDiv.innerHTML = `<i class="fas fa-${isUser ? 'user' : 'robot'} text-${isUser ? 'green' : 'blue'}-600 text-xl"></i>`;
+
+        const textDiv = document.createElement('div');
+        textDiv.className = (isUser ? 'mr-3 bg-green-100' : 'ml-3 bg-gray-100') + ' rounded-lg py-2 px-4';
+        textDiv.innerHTML = `<p class="text-gray-900">${text}</p>`;
+
+        messageDiv.appendChild(iconDiv);
+        messageDiv.appendChild(textDiv);
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      async function processCommand(command, type = 'text') {
+        try {
+          addMessage('Processing your request...', false);
+
+          const response = await fetch('/api/process_command', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command, type })
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+          }
+
+          const data = await response.json();
+          if (chatMessages.lastChild.textContent.includes('Processing your request...')) {
+            chatMessages.removeChild(chatMessages.lastChild);
+          }
+
+          if (data.error) {
+            addMessage(`Error: ${data.error}`, false);
+          } else {
+            addMessage(data.response, false);
+          }
+        } catch (error) {
+          if (chatMessages.lastChild.textContent.includes('Processing your request...')) {
+            chatMessages.removeChild(chatMessages.lastChild);
+          }
+          addMessage(`Error: ${error.message}`, false);
+        }
+      }
+
+      window.handleMessageSend = async function (e) {
+        e.preventDefault();
+        const text = textInput.value.trim();
+        if (text) {
+          addMessage(text, true);
+          await processCommand(text);
+          textInput.value = '';
+        }
+      };
+
+      textInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          handleMessageSend(e);
+        }
+      });
+
+      voiceBtn.addEventListener('click', async () => {
+        try {
+          const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+          recognition.lang = 'en-US';
+          voiceBtn.classList.add('pulse');
+          recognition.start();
+
+          recognition.onresult = (event) => {
+            const text = event.results[0][0].transcript;
+            addMessage(text, true);
+            processCommand(text, 'voice');
+          };
+
+          recognition.onend = () => {
+            voiceBtn.classList.remove('pulse');
+          };
+
+          recognition.onerror = () => {
+            voiceBtn.classList.remove('pulse');
+            addMessage('Sorry, I could not understand that. Please try again.', false);
+          };
+        } catch (error) {
+          addMessage('Voice recognition is not supported in this browser.', false);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

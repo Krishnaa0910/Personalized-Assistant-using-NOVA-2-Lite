@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+  <meta charset="UTF-8">
+  <title>Search Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Search the Web</h1>
+  <form id="search-form">
+    <input type="text" id="search-query" placeholder="Enter search query" required>
+    <button type="submit">Search</button>
+  </form>
+  <div id="search-result"></div>
+
+  <script>
+    const form = document.getElementById('search-form');
+    const resultDiv = document.getElementById('search-result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = document.getElementById('search-query').value;
+      const response = await fetch('/api/process_command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: `search ${query}`, type: "text" })
+      });
+      const data = await response.json();
+      resultDiv.innerText = data.response || data.error;
+    });
+  </script>
+</body>
+</html>
